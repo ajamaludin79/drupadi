@@ -1,0 +1,43 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+	RewriteBase /
+	
+	Header add Access-Control-Allow-Origin "*"
+	Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+	Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
+
+# External redirects with HTTP "301 - Moved Permanently" for subdomains
+# Redirect www.nl.example.com to nl.example.com
+	RewriteCond %{HTTP_HOST} ^www\.([^\.]*)\.eidara\.com$ [NC]
+	RewriteRule (.*) http://%1.eidaramata.com/$1 [R=301,L]
+# Redirect example.com to www.example.com	
+	RewriteCond %{HTTP_HOST} ^eidaramata.com$ 
+	RewriteRule ^(.*)$ http://eidaramata.com/$1 [R=301,L]	
+#Checks to see if the user is attempting to access a valid file,
+#such as an image or css document, if this isn't true it sends the
+#request to index.php
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ index.php?/$1 [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+# If we don't have mod_rewrite installed, all 404's
+# can be sent to index.php, and everything works as normal.
+	ErrorDocument 404 /index.php
+</IfModule> 
+
+<IfModule mod_deflate.c>
+    <filesMatch "\.(js|css|html|php)$">
+        SetOutputFilter DEFLATE
+    </filesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css text/javascript application/javascript
+</IfModule>
+
+
+
+
+
