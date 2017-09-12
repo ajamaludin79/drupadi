@@ -1,0 +1,70 @@
+.page-content-wrapper .page-content{   
+    padding: 5px 20px 10px !important;
+}
+body{overflow:hidden;}
+div.floating-panel {
+	position: absolute;	
+	z-index: 5;
+	background-color: #fff;
+	padding: 2px;
+	border: 1px solid #999;
+	text-align: center;
+	font-family: 'Roboto','sans-serif';
+	line-height: 30px;	
+	right: 7px;
+	top: 47px;
+  }
+
+.sidenav {
+    height: 86.8%;
+    width: 0;
+    position: fixed;
+    z-index: 1;   
+    background-color: #fff;
+    
+    transition: 0.5s;
+   
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 20px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #d2cbcb;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 25px;    
+}
+
+#main {
+    transition: margin-left .5s;
+    padding: 16px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+#btnopn{cursor:pointer;z-index: 1;position: absolute;margin-left: 10px;margin-top: 50px;}
+.row {margin-bottom: -15px !important;}p {	margin: 0 !important;} div.pgng{width:100%;}
+	.portlet.box > .portlet-title > .tools > a.removes {
+		background-image: url(../global/img/portlet-remove-icon-white.png);
+	}
+	.portlet > .portlet-title > .tools > a.removes {
+		background-image: url(../global/img/portlet-remove-icon.png);
+		background-repeat: no-repeat;
+		width: 11px;
+	}
+.ver-inline-menu li.active::after {    
+    border-left: 0;
+}
