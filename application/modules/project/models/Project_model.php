@@ -20,9 +20,9 @@ class Project_model extends CI_Model
 	}
 	 
 	 
-	public function get_data_by_id($id)
+	public function get_data_by_id($projectid)
 	{	
-		$this->db->where('projectid', $id);									
+		$this->db->where('projectid', $projectid);									
 		$query = $this->db->get($this->table_name);
 		if ($query->num_rows() > 0) return $query->row();
 		return NULL;	
@@ -48,7 +48,7 @@ class Project_model extends CI_Model
 	 */
 	function get_project_by_id($kd_id)
 	{
-		$this->db->where('id', $kd_id);
+		$this->db->where('projectid', $kd_id);
 
 		$query = $this->db->get($this->table_name);
 		if ($query->num_rows() > 0) return $query;
@@ -71,9 +71,9 @@ class Project_model extends CI_Model
 			$this->db->where('project.projectid LIKE \'%'.$searching.'%\' OR LOWER(project) LIKE \'%'.$searching.'%\'');						
 		}
 		
-		/* if($this->tank_auth->get_project_access()!="admin"){	
-			$this->db->where('company_id', $this->tank_auth->get_org_id());									
-		} */
+		if($this->tank_auth->get_user_access()!="admin"){	
+			$this->db->where('org_id', $this->tank_auth->get_org_id());									
+		} 
 		
 		$this->db->order_by("modified", "desc");		
 		
@@ -100,17 +100,17 @@ class Project_model extends CI_Model
 		$this->db->insert($this->table_name,$datas);
 	}
 	
-	function update_project($data,$id){
-		$this->db->where('id',$id);
+	function update_project($data,$projectid){
+		$this->db->where('projectid',$projectid);
 	 	$this->db->update($this->table_name,$data);
 	}
-	function delete_project($id){
-		$this->db->where('id',$id);
+	function delete_project($projectid){
+		$this->db->where('projectid',$projectid);
 		$this->db->delete($this->table_name);
 	}	
 	
 	function check_project($tag){
-		$query = $this->db->query("SELECT id FROM `mst_kualifikasi` WHERE id = '$tag'");
+		$query = $this->db->query("SELECT projectid FROM `mst_kualifikasi` WHERE projectid = '$tag'");
 
         if ($query->num_rows() === 1) {
 			echo 'false';

@@ -32,10 +32,12 @@
 						<a data-toggle="tab" href="#tab_2" aria-expanded="true">
 							<i class="fa fa-paste"></i> Salin blok yang lalu </a>
 					</li>
+					<!--
 					<li onclick="openNav('showpetani');">
 						<a data-toggle="tab" href="#tab_3" aria-expanded="true">
 							<i class="fa fa-user"></i> Penugasan Blok </a>
 					</li>
+					-->
 					<li onclick="openNav('infoproyek');">
 						<a data-toggle="tab" href="#tab_1" aria-expanded="true">
 							<i class="fa fa-info-circle"></i> Informasi Area </a>
@@ -66,7 +68,7 @@ $(document).ready(function(){
 		$('#titleMaps').html($("option:selected", this).text());
 		
 		$.post( "<?php echo base_url('maps/welcome/set_sessiPry');?>", { idpry: id, nmpry: text }, function(data, status){
-			maps_initialize();
+			maps_initialize(); $('#tind_blok,#infoproyek').html("");
 		});
 		
 		

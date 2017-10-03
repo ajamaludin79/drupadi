@@ -111,7 +111,7 @@
 						$('#loadingq').show();
 						$('#saveq').html('Proses..');					
 					},
-				  success: function(res) { 
+				  success: function(res) {
 					  $('#loadingq').fadeOut(); $('#saveq').html('Simpan');	
 					  if(res.status=='1'){
 						  $(".m_error").html(res.errors); 					  

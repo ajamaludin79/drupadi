@@ -104,10 +104,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				padding-left: 13px !important;		
 				padding-top: 2px !important;
 			}
-			.select2-container .select2-selection--single .select2-selection__rendered {
-				padding-left: 0px !important;
-				padding-top: 0px !important;
-			}
+			
 		</style>	
 		<script type="text/javascript">			
 				$(document).ready(function(){	
@@ -380,6 +377,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </form>
                                 <!-- END RESPONSIVE QUICK SEARCH FORM -->
                             </li>
+						<?php
+							if($this->tank_auth->get_user_access() =='admin'){
+						?>
                             <li class="nav-item start ">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-home"></i>
@@ -409,6 +409,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>
                                 </ul>
                             </li>
+							<?php }?>	
                             <li class="heading">
                                 <h3 class="uppercase">Features</h3>
                             </li>
@@ -455,6 +456,9 @@ License: You must have a valid license purchased only from themeforest(the above
                             <li class="heading">
                                 <h3 class="uppercase">Data Master</h3>
                             </li>
+						<?php
+							if($this->tank_auth->get_user_access() =='admin'){
+						?>	
                             <li class="nav-item  ">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-globe"></i>
@@ -463,13 +467,13 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </a>
                                 <ul class="sub-menu">                                                                        
                                     <li class="nav-item  ">
-                                        <a href="ecommerce_products_edit.html" class="nav-link ">
+                                        <a href="<?php echo base_url('list-proyek');?>" class="nav-link ">
                                             <i class="icon-graph"></i>
                                             <span class="title">Daftar Proyek</span>
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>							
                             <li class="nav-item  ">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-docs"></i>
@@ -485,6 +489,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>
                                 </ul>
                             </li>
+						<?php }?>	
                             <li class="nav-item  <?php echo ($menu_aktif == 'user') ? 'active open' : ''; ?>">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-user"></i>
@@ -501,6 +506,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>                                     
                                 </ul>
                             </li>
+						<?php
+							if($this->tank_auth->get_user_access() =='admin'){
+						?>	
                             <li class="heading">
                                 <h3 class="uppercase">Layouts</h3>
                             </li>                              
@@ -536,6 +544,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     </li>
                                 </ul>
                             </li>
+						<?php }?>	
                         </ul>
                         <!-- END SIDEBAR MENU -->
                         <!-- END SIDEBAR MENU -->

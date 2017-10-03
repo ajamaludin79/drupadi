@@ -77,9 +77,9 @@ class User_model extends CI_Model
 			$this->db->where('id', $userid);									
 		}
 		
-		//if($this->tank_auth->get_user_access()!="admin"){	
+		if($this->tank_auth->get_user_access()!="admin"){	
 			$this->db->where('org_id', $this->tank_auth->get_org_id());									
-		//}
+		}
 		
 		$this->db->order_by("created", "desc");		
 		

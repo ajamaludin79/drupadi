@@ -1,8 +1,4 @@
-<style>
-	.panel-group {
-		margin-bottom: 2px !important;
-	}
-</style>	
+
 <div class="portlet light ">
 	<div class="portlet-title">
 		<div class="caption">
@@ -58,13 +54,13 @@
 											<td>Petani</td>															
 											<td>:</td>															
 											<td>
-												<select>
+												<select class="ptni">
 												<?php 
 													$petani = $this->user_model->get_all_user(100);
 													if(isset($petani)){
 														foreach($petani->result() as $rows){
 															$sel 	= ($irows->user_id==$rows->id) ? "selected" : "";													
-															echo '<option value="'.$irows->user_id.'" '.$sel.'>'.$rows->first_name.'</option>';	
+															echo '<option value="'.$rows->id.'" '.$sel.'>'.$rows->first_name.'</option>';	
 														}	
 													}else{
 														echo '<option>-tidak ada user-</option>';		
@@ -74,7 +70,7 @@
 											</td>	
 										</tr>
 										<tr>														
-											<td colspan="3"><a href="javascript:;" class="btn btn-small savedata"><i class="fa fa-pencil"></i> Edit </a></td>																									
+											<td colspan="3"><a href="javascript:;" class="btn btn-small savedataarea" id="<?php echo $irows->area_id;?>"><i class="fa fa-pencil"></i> Edit </a></td>																									
 										</tr>
 									</tbody>    
 								</table>								
@@ -98,8 +94,12 @@ $(document).ready(function(){
 		alert($(this).html());
 	}); */	
 	
+	$('select.ptni').prop('disabled', 'disabled');
 	
-	$("a.savedata").click(function(){		
+	$("a.savedataarea").click(function(){	
+		var idtable = $(this).attr('id'), that = $(this);
+		$(this).parent().parent().parent().find("select").prop('disabled', false);
+		
 		var inp = $(this).parent().parent().parent().find("td:eq(2),td:eq(5),td:eq(8),td:eq(14)");
 		
 		var jenis 	= $(this).parent().parent().parent().find("td:eq(2)").html();
@@ -112,8 +112,10 @@ $(document).ready(function(){
 		$(this).parent().parent().parent().find("td:eq(2)").focus();					
 		
 		if($(this).html()=='<i class="fa fa-save"></i> Simpan '){ 
-			$.post( "./maps/welcome/getUsiaSawah",{today:today}, function( data ) {
-				//that.parent().parent().find(".trusia").html(data);
+			$.post( "./maps/welcome/updateArea",{area:jenis,type:type,mt:mt,sts:sts,petani:petani,id:idtable}, function( data ) {
+				that.html('<i class="fa fa-pencil"></i> Edit ');					
+				inp.prop('contenteditable', false).css('background','transparent');
+				that.parent().parent().parent().find("select").prop('disabled', true);
 			}); 
 		} 	
 		$(this).html('<i class="fa fa-save"></i> Simpan ');	

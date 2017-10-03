@@ -107,8 +107,7 @@ class Auth extends CI_Controller
 			redirect('/auth/send_again/');
 
 		} else {						
-			$_POST 	= json_decode(file_get_contents('php://input'),true);			
-						
+			$_POST 	= json_decode(file_get_contents('php://input'),true);									
 			$data['login_by_username'] = ($this->config->item('login_by_username', 'tank_auth') AND
 					$this->config->item('use_username', 'tank_auth'));
 			$data['login_by_email'] = $this->config->item('login_by_email', 'tank_auth');

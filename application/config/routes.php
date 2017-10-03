@@ -52,6 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'maps/welcome';
 
 ##MASTER
+$route['list-proyek'] 		= 'project/project';
 $route['list-users'] 		= 'users/user';
 $route['list-organization'] = 'organization/organization';
 $route['404_override'] 	= '';

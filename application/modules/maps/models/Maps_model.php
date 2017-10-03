@@ -47,9 +47,13 @@ class Maps_model extends CI_Model
 	
 	function get_area_by_userId()
 	{
-		if($this->tank_auth->get_user_access()!="admin"){	
-			$this->db->where('area_location.user_id', $this->tank_auth->get_user_id());
-			$this->db->where('area_location.org_id', $this->tank_auth->get_org_id());									
+		if($this->tank_auth->get_user_access()=="user"){	
+			$this->db->where('area_location.user_id', $this->tank_auth->get_user_id());	
+			$this->db->where('area_location.org_id', $this->tank_auth->get_org_id());		
+		}	
+		
+		if($this->tank_auth->get_user_access()=="spv"){	
+			$this->db->where('area_location.org_id', $this->tank_auth->get_org_id());	
 		}	
 				
 		$this->db->limit(1);
@@ -68,6 +72,21 @@ class Maps_model extends CI_Model
 			foreach($query->result() as $rows){
 				$poly .= $rows->lat.','.$rows->long.' ';
 			}			
+		}
+
+		return $poly;	
+	} 
+	
+	
+	function show_detail_poly_by_id($kd_id)
+	{
+		$this->db->where('area_id', $kd_id);
+		$query = $this->db->get('area_location_d');
+		$poly = null;
+		if ($query->num_rows() > 0){
+			$rows = $query->row();
+				$poly = $rows->lat.','.$rows->long;
+						
 		}
 
 		return $poly;	
@@ -112,7 +131,7 @@ class Maps_model extends CI_Model
 	 * @param	bool
 	 * @return	object
 	 */
-	function get_all_area($starting=null,$recpage=null,$searching=null)
+	function get_all_area($starting=null,$recpage=null,$searching=null,$id=null)
 	{			
 		$this->db->from($this->table_name);		
 		
@@ -121,12 +140,20 @@ class Maps_model extends CI_Model
 			//$this->db->where("(LOWER(areaname) LIKE '%$searching%' OR CONCAT(first_name,' ',last_name') LIKE '%$searching%')");	
 		}
 		
-		if($this->tank_auth->get_user_access()!="admin"){	
-			$this->db->where('area_location.user_id', $this->tank_auth->get_user_id());
-			$this->db->where('area_location.org_id', $this->tank_auth->get_org_id());									
+		if($this->tank_auth->get_user_access()=="user"){	
+			$this->db->where('area_location.user_id', $this->tank_auth->get_user_id());	
+			$this->db->where('area_location.org_id', $this->tank_auth->get_org_id());		
+		}	
+		
+		if($this->tank_auth->get_user_access()=="spv"){	
+			$this->db->where('area_location.org_id', $this->tank_auth->get_org_id());	
 		}
 		
 		$sessdata = $this->session->userdata('sessdata');	
+		
+		if($id){			
+			$this->db->where("area_location.area_id", $id);		
+		}
 		
 		if(isset($sessdata)){
 			$pry_id = $sessdata['pry_id'];

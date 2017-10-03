@@ -8,7 +8,7 @@ class User extends CI_Controller
 		
 		$this->load->helper(array('form', 'url'));
 		$this->load->library(array('form_validation','tank_auth'));	
-		$this->load->model(array('user_model'));	
+		$this->load->model(array('user_model','organization/organization_model'));	
 		//$this->lang->load('tank_auth');
 	}
 
@@ -131,7 +131,7 @@ class User extends CI_Controller
 				$access 	= $this->input->post('access');
 				$email 		= $this->input->post('email');
 				$active 	= $this->input->post('aktif');
-				$company 	= $this->input->post('company_id');
+				$company 	= $this->input->post('org_id');
 				$hp 		= $this->input->post('hp');
 				$ktp 		= $this->input->post('ktp');
 				$cmpny 		= $this->tank_auth->get_org_id();
@@ -147,7 +147,7 @@ class User extends CI_Controller
 								'access'  			=> $access,
 								'email'     		=> $email,
 								'birthday'     		=> $this->tank_auth->date_in_sql($birthday),
-								'company_id'		=> $cmpny,								
+								'org_id'			=> $cmpny,								
 								'mobilenumber'		=> $hp,								
 								'ktp'				=> $ktp,								
 								'alamat'			=> $this->input->post('alamat'),								

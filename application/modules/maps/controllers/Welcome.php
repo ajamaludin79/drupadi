@@ -33,7 +33,14 @@ class Welcome extends CI_Controller
 				$pry = $this->project_model->get_data_by_id($sessPry->projectid);
 				$sessdata = array(
 				   'pry_id'  	=> $sessPry->projectid,
-				   'pry_name'   => $pry->project			   
+				   'pry_name'   => $pry->project,			   
+				   'lat'  		=> $pry->lat,			   
+				   'long'   	=> $pry->long,			   
+				   'imglnorth'  => $pry->imglnorth,			   
+				   'imglsouth'  => $pry->imglsouth,			   
+				   'imgleast'  	=> $pry->imgleast,			   
+				   'imglwest'  	=> $pry->imglwest,			   
+				   'imgpath'  	=> $pry->imagepath			   			   
 				);
 				$this->session->set_userdata('sessdata',$sessdata);	
 			}
@@ -251,7 +258,9 @@ class Welcome extends CI_Controller
 			$parnode 	= $dom->appendChild($node); //make the node show up 
 
 			// Select all the rows in the markers table
-			$results = $this->maps_model->get_all_area(100);
+			$idpoly 	= $this->input->get('idpoly');
+			
+			$results = $this->maps_model->get_all_area(100,null,null,$idpoly);
 			if (!$results) {  
 				header('HTTP/1.1 500 Error: Could not get markers!'); 
 				exit();
@@ -272,7 +281,12 @@ class Welcome extends CI_Controller
 			  $newnode->setAttribute("petani", isset($petani) ? ucwords($petani->first_name):"");  
 			  $newnode->setAttribute("m_tanam", $this->tank_auth->date_in_view($obj->m_tanam));  
 			  $newnode->setAttribute("areaid", $obj->area_id);  	
-				$polygon = $this->maps_model->get_detail_poly_by_id($obj->area_id);
+				/* if($idpoly){
+					$polygon = $this->maps_model->show_detail_poly_by_id($obj->area_id);
+				}else{ */
+					$polygon = $this->maps_model->get_detail_poly_by_id($obj->area_id);
+				//}
+				
 				if(!empty($polygon)){
 					$newnode->setAttribute("poly", trim($polygon));  			  
 				}else{
@@ -289,8 +303,8 @@ class Welcome extends CI_Controller
 	{
 		if (!$this->tank_auth->is_logged_in()) {
 			redirect('/auth/login/');
-		}else if($this->tank_auth->get_user_access()!='admin'){ 
-			redirect('welcome');
+		/*}else if($this->tank_auth->get_user_access()!='admin'){ 
+			redirect('welcome');*/
 		} else {		
 			$data['company_id']	= $this->tank_auth->get_org_id();
 			$data['user_id']	= $this->tank_auth->get_user_id();
@@ -328,8 +342,8 @@ class Welcome extends CI_Controller
 	{
 		if (!$this->tank_auth->is_logged_in()) {
 			redirect('/auth/login/');
-		}else if($this->tank_auth->get_user_access()!='admin'){ 
-			redirect('welcome');
+		/*}else if($this->tank_auth->get_user_access()!='admin'){ 
+			redirect('welcome');*/
 		} else {		
 			$data['company_id']	= $this->tank_auth->get_org_id();
 			$data['user_id']	= $this->tank_auth->get_user_id();
@@ -344,8 +358,8 @@ class Welcome extends CI_Controller
 	{
 		if (!$this->tank_auth->is_logged_in()) {
 			redirect('/auth/login/');
-		}else if($this->tank_auth->get_user_access()!='admin'){ 
-			redirect('welcome');
+		/*}else if($this->tank_auth->get_user_access()!='admin'){ 
+			redirect('welcome');*/
 		} else {		
 			$data['company_id']	= $this->tank_auth->get_org_id();
 			$data['user_id']	= $this->tank_auth->get_user_id();
@@ -360,14 +374,22 @@ class Welcome extends CI_Controller
 	{
 		if (!$this->tank_auth->is_logged_in()) {
 			redirect('/auth/login/');
-		}else if($this->tank_auth->get_user_access()!='admin'){ 
-			redirect('welcome');
+		/*}else if($this->tank_auth->get_user_access()!='admin'){ 
+			redirect('welcome');*/
 		} else {		
-						
+			$pryid 	= $this->input->post('idpry');
+			$pry 	= $this->project_model->get_data_by_id($pryid);		
 			$sessdata = array(
-			   'pry_id'  	=> $this->input->post('idpry'),
-			   'pry_name'   => $this->input->post('nmpry')			   
-		    );
+			   'pry_id'  	=> $pryid,
+			   'pry_name'   => $pry->project,			   
+			   'lat'  		=> $pry->lat,			   
+			   'long'   	=> $pry->long,			   
+			   'imglnorth'  => $pry->imglnorth,			   
+			   'imglsouth'  => $pry->imglsouth,			   
+			   'imgleast'  	=> $pry->imgleast,			   
+			   'imglwest'  	=> $pry->imglwest,			   
+			   'imgpath'  	=> $pry->imagepath			   
+			);
 			$this->session->set_userdata('sessdata',$sessdata);								
 		}
 	}
@@ -438,7 +460,7 @@ class Welcome extends CI_Controller
 				$tindakan 	= $this->input->post('tarray');
 					
 				//Delete tindakan
-				$results = $this->maps_model->delete_tindakan($id);					
+				$results = $this->maps_model->delete_tindakan($id);									
 				foreach($tindakan as $arr_tind){
 					foreach($arr_tind as $a1){
 						$a2       = array(
@@ -450,6 +472,45 @@ class Welcome extends CI_Controller
 						$results = $this->maps_model->save_area($tind,"area_actionplan"); 
 					}	
 				}					
+			}
+		}
+	}	
+	
+	function updateArea()
+	{
+		if (!$this->tank_auth->is_logged_in()) {
+			redirect('/auth/login/');		
+		} else {
+			################ Save & delete markers #################
+			if($_POST) //run only if there's a post data
+			{
+				//make sure request is comming from Ajax
+				$xhr = $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'; 
+				if (!$xhr){ 
+					header('HTTP/1.1 500 Error: Request must come from Ajax!'); 
+					exit();	
+				}
+								
+								
+				$id 	= filter_var($_POST["id"], FILTER_SANITIZE_STRING);				
+				$area 	= $this->input->post('area');
+				$type 	= $this->input->post('type');
+				$mt 	= $this->input->post('mt');
+				$sts 	= $this->input->post('sts');
+				$petani = $this->input->post('petani');
+					
+		
+				$data       = array(
+					'area'			=> $area,
+					'type'			=> $type,
+					'm_tanam'		=> $this->tank_auth->date_in_sql($mt),
+					'status'		=> $sts,
+					'user_id'		=> $petani,
+					'modified'		=> $this->tank_auth->insertDatetime(),
+					'created_by'	=> $this->tank_auth->get_user_id()						
+				);	
+								
+				$results = $this->maps_model->update_area($data,$id);				
 			}
 		}
 	}		

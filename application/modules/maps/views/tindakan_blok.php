@@ -1,6 +1,6 @@
 <style>
 	td:empty:after {
-		content: 'required';
+		content: '-kosong-';
 		color: #C7C7CD;
 	}
 </style>
@@ -23,8 +23,8 @@
 				foreach($info as $irows){ $n++;
 		?>		<div id="accordion<?php echo $n;?>" class="panel-group">
 					<div class="panel panel-danger">					
-						<h4 class="panel-title">
-							<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion<?php echo $n;?>" href="#accordion1_<?php echo $n;?>" aria-expanded="true"> <?php echo $n;?>. Blok <?php echo $n;?> </a>
+						<h4 class="panel-title">							
+							<a class="accordion-toggle collapsed showpoly" areaid ="<?php echo $irows->area_id;?>" data-toggle="collapse" data-parent="#accordion<?php echo $n;?>" href="#accordion1_<?php echo $n;?>" aria-expanded="true"> <?php echo $n;?>. Blok <?php echo $n;?> </a>
 						</h4>					
 						<div id="accordion1_<?php echo $n;?>" class="panel-collapse collapse in" aria-expanded="true">
 							<div class="panel-body" style="pading:5px;"> 
@@ -82,20 +82,34 @@
 										<th>Banyak</th>	
 									</thead>
 									<tbody id="myTable<?php echo $irows->area_id;?>">	
+										<tr>					
+											<td class="tind"></td>															
+											<td class="satuan"></td>															
+											<td class="banyak"></td>												
+											<td><a href="javascript:;" style="padding: 0px;" onclick="myFunction('<?php echo $irows->area_id;?>',this)"><i class="fa fa-plus"></i></a></td>	
+										</tr>																														
 									<?php
-										$g_area = $this->maps_model->get_area_by_id($irows->area_id,'area_actionplan');
+									$g_area = $this->maps_model->get_area_by_id($irows->area_id,'area_actionplan');
+									if(isset($g_area)){	
 										$rows = isset($g_area) ? $g_area->result() : array(0);
 										foreach($rows as $row){
 									?>	
 										<tr>					
-											<td class="tind"></td>															
-											<td class="satuan"></td>															
-											<td class="banyak"></td>	
-											<td><a href="javascript:;" style="padding: 0px;" onclick="myFunction('<?php echo $irows->area_id;?>',this)"><i class="fa fa-plus black"></i></a></td>	
+											<td class="tind"><?php echo isset($g_area) ? $row->action: "";?></td>															
+											<td class="satuan"><?php echo isset($g_area) ? $row->subaction: "";?></td>															
+											<td class="banyak"><?php echo isset($g_area) ? $row->amount: "";?></td>	
+											<?php
+												
+												$act = isset($g_area) ? 'removeRows(this)' : 'myFunction(\''.$irows->area_id.'\',this)';
+												$icon = isset($g_area) ? 'fa-trash' : 'fa-pencil';
+											?>
+											<td><a href="javascript:;" style="padding: 0px;" onclick="<?php echo $act;?>"><i class="fa <?php echo $icon;?>"></i></a></td>	
 										</tr>	
-									<?php } ?>	
+									<?php }
+									}
+									?>	
 										<tr>														
-											<td colspan="3"><a href="javascript:;" class="btn btn-small savetindakan" id="<?php echo $irows->area_id;?>"><i class="fa fa-pencil"></i> Simpan </a></td>																									
+											<td colspan="3"><a href="javascript:;" class="btn btn-small savetindakan" id="<?php echo $irows->area_id;?>"><i class="fa fa-save"></i> Simpan </a></td>																									
 										</tr>		
 									</tbody>    
 								</table>	
@@ -115,6 +129,11 @@
 <script type="text/javascript">
 $(document).ready(function(){						
 	//$( "#accordion" ).accordion( "option", "active", 0 );
+	$( ".showpoly" ).click(function() {		
+		var areaid 	= $(this).attr('areaid');
+		getPolygon(areaid,false,true);
+	});
+	
 	$( "a.savetindakan" ).click(function() {
 		var idtable 	= $(this).attr('id');		
 		var tind		= "", sat	= "", byk	= "";
@@ -140,7 +159,7 @@ $(document).ready(function(){
 		var that = $(this);		
 		$(this).html('<img src="<?php echo base_url("assets/");?>build/img/ajax-loader.gif" alt="save loading..">');
 		$.post( "<?php echo base_url("maps/welcome/save_tindakan");?>",{tarray:tindkn,id:idtable}, function( data ) {
-			that.html('<i class="fa fa-pencil"></i> Simpan ');			
+			that.html('<i class="fa fa-save"></i> Simpan ');			
 		});	
 		return false; 		
 	});

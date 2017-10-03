@@ -34,6 +34,11 @@ div.marker-info-win p{padding: 0px;margin: 10px 0px 10px 0;}
 div.marker-inner-win{padding: 5px;}
 button.save-marker, button.remove-marker{border: none;background: rgba(0, 0, 0, 0);color: #00F;padding: 0px;text-decoration: underline;margin-right: 10px;cursor: pointer;
 }
+
+.panel-group {
+	margin-bottom: 2px !important;
+}
+
 </style>
 <div class="page-content">	
 	<div class="row">
@@ -138,8 +143,18 @@ $(document).ready(function() {
 		
 	function maps_initialize()
 	{
+			var lati 		= '<?php echo isset($sessdata['lat']) ? $sessdata['lat'] : "0.5585831513372275";?>';
+			var longi 		= '<?php echo isset($sessdata['long']) ? $sessdata['long'] : "123.05879216169362";?>';
+			
+			var imglnorth 	= '<?php echo isset($sessdata['imglnorth']) ? $sessdata['imglnorth'] : "";?>',
+				imglsouth 	= '<?php echo isset($sessdata['imglsouth']) ? $sessdata['imglsouth'] : "";?>',
+				imgleast 	= '<?php echo isset($sessdata['imgleast']) ? $sessdata['imgleast'] : "";?>',
+				imglwest 	= '<?php echo isset($sessdata['imglwest']) ? $sessdata['imglwest'] : "";?>',
+				imgpath 	= '<?php echo isset($sessdata['imgpath']) ? $sessdata['imgpath'] : "";?>';
+				
+			
 			var googleMapOptions = { 
-				center: new google.maps.LatLng(0.5585831513372275, 123.05879216169362), // map center				          
+				center: new google.maps.LatLng(parseFloat(lati), parseFloat(longi)), // map center				          
 				zoom: 18, //zoom level, 0 = earth view to higher value
 				//maxZoom: 18,
 				minZoom: 16,
@@ -154,54 +169,27 @@ $(document).ready(function() {
 		   	$map = new google.maps.Map(document.getElementById("maps_in"), googleMapOptions);			
 			
 			var bounds = new google.maps.LatLngBounds(
-			new google.maps.LatLng(0.556706230317291, 123.05865000461586),
-			new google.maps.LatLng(0.5601580693606888, 123.06106935714729));
+			new google.maps.LatLng(parseFloat(imglnorth), parseFloat(imglsouth)),
+			new google.maps.LatLng(parseFloat(imgleast), parseFloat(imglwest)));
 
 			historicalOverlay = new google.maps.GroundOverlay(
-				'<?php echo base_url("assets/attach/".$this->tank_auth->get_org_id()."/1491411269.png");?>',
+				'<?php echo base_url("assets/attach/".$this->tank_auth->get_org_id());?>/'+imgpath,
 				bounds);
 
 			addOverlay();
 			
-			//Load Markers from the XML File, Check (map_process.php)
-			$.get("<?php echo base_url('maps/welcome/getPolygon');?>", function (data) {
-				$(data).find("polygon").each(function () {
-					  var area 		= $(this).attr('area');
-					  var status 	= $(this).attr('status');					  
-					  var areaid	= $(this).attr('areaid');
-					  var type 		= $(this).attr('type');					  		  
-					  var m_tanam	= $(this).attr('m_tanam');					  		  
-					  var petani	= $(this).attr('petani');					  		  
-					  var lokasi	= $(this).attr('poly');		//var dtPoly = JSON.parse(point);	console.log(dtPoly);
-					  var title		= area+" - "+petani;
-					  var Forms = 	'<p><div class="marker-edit">'+						
-									'<label for="pName"><span>Jenis </span>'+area+'</label>'+
-									'<label for="pType"><span>Type </span>'+type+'</label>'+				
-									'<label for="tName"><span>Mulai Tanam </span>'+m_tanam+'</label>'+
-									'<label for="pDesc"><span>Status </span>'+status+'</label>'+				
-									'</div></p>';				
-					
-					var cords = [];
-					var str = lokasi.split(" "); 
-					
-					for (var j=0; j < str.length; j++) { 
-						var point = str[j].split(",");
-						cords.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
-					}
-					  
-					  create_polygon(cords, title, Forms, false, false, false, false,areaid,true);
-				});
-			});
+			//Load polygon from the XML File, Check (map_process.php)
+			getPolygon();
 
 			//Right Click to Drop a New Marker			
-			google.maps.event.addListener($map, 'rightclick', function(event) {
+			/* google.maps.event.addListener($map, 'rightclick', function(event) {
 				//Edit form to be displayed with new marker
 				form_marker(event);
-			});		
+			}); */		
 
-			google.maps.event.addListener(historicalOverlay, 'rightclick', function(event) {
+			/* google.maps.event.addListener(historicalOverlay, 'rightclick', function(event) {
 				form_marker(event);			
-			});		
+			}); */		
 						
 			overlay 		= new google.maps.OverlayView();
 			overlay.draw 	= function() {};
@@ -256,8 +244,8 @@ $(document).ready(function() {
 				drawingManager.setDrawingMode(null);
 				// Add an event listener that selects the newly-drawn shape when the user
 				// mouses down on it.
-				var newShape = e.overlay;
-				newShape.type = e.type;
+				var newShape 	= e.overlay;
+				newShape.type 	= e.type;
 				google.maps.event.addListener(newShape, 'click', function() { 
 					if(e.type=='polygon'){						
 						form_polygon(newShape.getPath());	
@@ -291,9 +279,10 @@ $(document).ready(function() {
 			selectedShape.setMap(null);			
 		}
 	}
+	
 	//############### Create Marker Function ##############
-	function create_polygon(poly, MapTitle, MapDesc,  InfoOpenDefault, DragAble, Removable, Editable,areaid,create)
-	{	
+	function create_polygon(poly, MapTitle, MapDesc,  InfoOpenDefault, DragAble, Removable, Editable,areaid,create,outside)
+	{	console.log(poly);
 		// Construct the polygon.
 		if(create){ 
 			var poly = new google.maps.Polygon({
@@ -359,17 +348,31 @@ $(document).ready(function() {
 			});
 		}
 		
-		//add click listner to save marker button		 
+		//add click listner to save marker button	
+		
 		google.maps.event.addListener(poly, 'click', function(e) {	
 			if (infowindow) { 
-				infowindow.close(); 
-				
+				infowindow.close(); 				
 				infowindow.open($map); // click on marker opens info window 
 				infowindow.setPosition(e.latLng); 			
 				setSelection(poly);
 			}	
 	    });
-		  
+		
+		if (outside) { 
+			if (infowindow) { 
+				new google.maps.event.trigger( $map, 'click' );				
+				infowindow.open($map); // click on marker opens info window 
+				//infowindow.setPosition(e.latLng); 			
+				infowindow.setPosition( poly[0] );
+				//setSelection(poly);
+			}
+		}
+				  
+		google.maps.event.addListener($map, 'click', function() {
+			infowindow.close();
+		});	
+		
 		if(InfoOpenDefault) //whether info window should be open by default
 		{ 
 			var x = poly.getAt(0); 
@@ -723,6 +726,39 @@ $(document).ready(function() {
 	var height = (height)-105;
 	//document.getElementById('maps_in').style.height = height + 'px'; 	
 	$('#maps_in').css('height',height + 'px'); 	
+	
+	function getPolygon(idx=false,create=true,outside=false){ 
+		var ids = (idx.length>0) ? idx : "";
+		$.get("<?php echo base_url('maps/welcome/getPolygon');?>",{idpoly :ids}, function (data) {
+			$(data).find("polygon").each(function () {
+				  var area 		= $(this).attr('area');
+				  var status 	= $(this).attr('status');					  
+				  var areaid	= $(this).attr('areaid');
+				  var type 		= $(this).attr('type');					  		  
+				  var m_tanam	= $(this).attr('m_tanam');					  		  
+				  var petani	= $(this).attr('petani');					  		  
+				  var lokasi	= $(this).attr('poly');		//var dtPoly = JSON.parse(point);	console.log(dtPoly);
+				  var title		= area+" - "+petani;
+				  var Forms = 	'<p><div class="marker-edit">'+						
+								'<label for="pName"><span>Jenis </span>'+area+'</label>'+
+								'<label for="pType"><span>Type </span>'+type+'</label>'+				
+								'<label for="tName"><span>Mulai Tanam </span>'+m_tanam+'</label>'+
+								'<label for="pDesc"><span>Status </span>'+status+'</label>'+				
+								'</div></p>';				
+				
+				var cords = [];
+				var str = lokasi.split(" "); 
+				
+				for (var j=0; j < str.length; j++) { 
+					var point = str[j].split(",");
+					cords.push(new google.maps.LatLng(parseFloat(point[0]), parseFloat(point[1])));
+				}
+				  //var out = 0.5591458734908274,123.05674016475677
+				  create_polygon(cords, title, Forms, false, false, false, false,areaid,create,outside);
+			});
+		});
+	}		
+	
 </script>	
 <!-- END PAGE HEADER--> 
 

@@ -140,6 +140,9 @@ class Organization extends CI_Controller
 					$this->organization_model->update_organization($data,$org_id);					
 				}	
 				
+				$d       = array('org_id'		=> $org_id);
+				$this->user_model->update_user($d,$pic);
+				
 				$message = array('status' => 0,'sukses' => 'data sudah tersimpan');		
 			}else{
 				$message = array('status' => 1,'errors' => validation_errors());				
