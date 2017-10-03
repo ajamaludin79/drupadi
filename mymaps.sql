@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 100108
 File Encoding         : 65001
 
-Date: 2017-09-08 16:54:32
+Date: 2017-10-02 15:00:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,26 +21,43 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `area_actionplan`;
 CREATE TABLE `area_actionplan` (
   `area_id` varchar(16) NOT NULL,
-  `action` varchar(60) NOT NULL,
+  `action` varchar(100) NOT NULL,
   `subaction` varchar(20) NOT NULL,
-  `amount` int(11) DEFAULT NULL,
+  `amount` varchar(20) NOT NULL,
+  `created` datetime NOT NULL,
+  `created_by` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  KEY `area_id` (`area_id`),
+  CONSTRAINT `area_actionplan_ibfk_1` FOREIGN KEY (`area_id`) REFERENCES `area_location` (`area_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of area_actionplan
+-- ----------------------------
+INSERT INTO `area_actionplan` VALUES ('1709003', 'pestisida<br>', 'lt', '3', '2017-09-25 08:39:11', '1704001');
+INSERT INTO `area_actionplan` VALUES ('1709003', 'Air', 'lt', '20', '2017-09-25 08:39:11', '1704001');
+INSERT INTO `area_actionplan` VALUES ('1709003', 'pupuk', 'lt', '20', '2017-09-25 08:39:11', '1704001');
+
+-- ----------------------------
+-- Table structure for area_actionplan_old
+-- ----------------------------
+DROP TABLE IF EXISTS `area_actionplan_old`;
+CREATE TABLE `area_actionplan_old` (
+  `area_id` varchar(16) NOT NULL,
+  `action` varchar(100) NOT NULL,
+  `subaction` varchar(20) NOT NULL,
+  `amount` varchar(20) NOT NULL,
   `created` datetime NOT NULL,
   `created_by` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   KEY `area_id` (`area_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of area_actionplan
+-- Records of area_actionplan_old
 -- ----------------------------
-INSERT INTO `area_actionplan` VALUES ('1709001', 'sds', '', null, '2017-09-04 08:41:04', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709002', 'sds', '', null, '2017-09-04 08:41:54', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709008', 'Kacang', '', null, '2017-09-04 14:59:17', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709009', 'jack', '', null, '2017-09-04 16:56:15', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709010', 'jeruk', '', null, '2017-09-05 10:23:47', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709012', 'KECAPI', '', null, '2017-09-05 10:25:45', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709013', 'PEPAYA', '', null, '2017-09-05 10:35:07', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709014', 'KETIMUN', '', null, '2017-09-05 10:38:07', '1702005');
-INSERT INTO `area_actionplan` VALUES ('1709015', 'DF', '', null, '2017-09-05 14:55:36', '1702005');
+INSERT INTO `area_actionplan_old` VALUES ('1709016', 'df', 'dfd', 'fdf', '2017-09-13 10:53:39', '1702005');
+INSERT INTO `area_actionplan_old` VALUES ('1709017', 'asa<br>', 'sasa', 'asas', '2017-09-13 11:16:08', '1702005');
+INSERT INTO `area_actionplan_old` VALUES ('1709017', 'zxzxzx', 'zx', 'zxzx', '2017-09-13 11:16:08', '1702005');
+INSERT INTO `area_actionplan_old` VALUES ('1709017', 'zxzx<br>', 'zxz', 'xzx', '2017-09-13 11:16:08', '1702005');
 
 -- ----------------------------
 -- Table structure for area_location
@@ -54,7 +71,7 @@ CREATE TABLE `area_location` (
   `status` text NOT NULL,
   `created` datetime NOT NULL,
   `created_by` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL,
   `org_id` varchar(15) NOT NULL,
   `projectid` varchar(15) NOT NULL,
   `user_id` varchar(15) NOT NULL,
@@ -65,18 +82,11 @@ CREATE TABLE `area_location` (
 -- ----------------------------
 -- Records of area_location
 -- ----------------------------
-INSERT INTO `area_location` VALUES ('1709001', 'sds', '', '0000-00-00', 'sdsds', '2017-09-04 08:41:04', '1702005', '2017-09-04 14:45:27', '1', '20160505', '1702005');
-INSERT INTO `area_location` VALUES ('1709002', 'sds', '', '2017-02-02', 'sdsd', '2017-09-04 08:41:54', '1702005', '2017-09-04 14:43:54', '1', '20160505', '1707001');
-INSERT INTO `area_location` VALUES ('1709008', 'Kacang', 'IR 64', '2017-08-01', 'Daunya pada kering', '2017-09-04 14:59:17', '1702005', '2017-09-04 14:59:17', '1', '20160505', '1704001');
-INSERT INTO `area_location` VALUES ('1709009', 'jack', 'IR 64', '2017-11-01', 'test', '2017-09-04 16:56:15', '1702005', '2017-09-04 16:56:15', '1', '20160505', '1707001');
-INSERT INTO `area_location` VALUES ('1709010', 'jeruk', 'IR 64', '2017-02-20', 'test', '2017-09-05 10:23:47', '1702005', '2017-09-05 10:23:47', '1', '20160507', '1707001');
-INSERT INTO `area_location` VALUES ('1709012', 'KECAPI', 'IR 64', '2017-09-05', 'bijinya banyak', '2017-09-05 10:25:45', '1702005', '2017-09-05 10:25:45', '1', '20160507', '1707001');
-INSERT INTO `area_location` VALUES ('1709013', 'PEPAYA', 'IR 64', '2017-08-30', 'daunnya kering', '2017-09-05 10:35:07', '1702005', '2017-09-05 10:35:07', '1', '20160507', '1704001');
-INSERT INTO `area_location` VALUES ('1709014', 'KETIMUN', 'IR 64', '2017-02-02', 'ketimunnya pait', '2017-09-05 10:38:07', '1702005', '2017-09-05 10:38:07', '1', '20160507', '1707001');
-INSERT INTO `area_location` VALUES ('1709015', 'DF', 'IR 67 test', '2017-01-30', 'test', '2017-09-05 14:55:36', '1702005', '2017-09-05 14:55:36', '1', '20160507', '1707001');
-INSERT INTO `area_location` VALUES ('1709016', 'SINGKONG', 'ubi jalar', '2017-09-30', 'test', '2017-09-08 10:13:41', '1702005', '2017-09-08 10:13:41', '1', '20160505', '1707001');
-INSERT INTO `area_location` VALUES ('1709017', 'UBI', 'ubi jalar', '2017-12-20', 'sdsdsds', '2017-09-08 10:14:37', '1702005', '2017-09-08 10:14:37', '1', '20160505', '1707001');
-INSERT INTO `area_location` VALUES ('1709018', 'SD', 'sds', '2017-09-05', 'sdsd', '2017-09-08 16:12:07', '1702005', '2017-09-08 16:12:07', '1', '20160505', '1707001');
+INSERT INTO `area_location` VALUES ('1709001', 'PADI SPECIAL', 'nk1', '2017-09-05', 'sehat', '2017-09-20 13:03:07', '1704001', '0000-00-00 00:00:00', '1', '20160507', '1707001');
+INSERT INTO `area_location` VALUES ('1709002', 'PADI CILACAP', 'k1', '2017-09-04', ' ', '2017-09-20 13:04:07', '1704001', '0000-00-00 00:00:00', '1', '20160507', '1702005');
+INSERT INTO `area_location` VALUES ('1709003', 'PADI CILACAP', 'k1', '2017-09-04', ' ', '2017-09-20 13:04:09', '1704001', '0000-00-00 00:00:00', '1', '20160507', '1702005');
+INSERT INTO `area_location` VALUES ('1709004', 'SDSD', 'dssds', '2017-09-08', 'sdsd', '2017-09-25 09:21:33', '1709001', '0000-00-00 00:00:00', '1709001', '1709001', '1709002');
+INSERT INTO `area_location` VALUES ('1709005', 'DFD', 'dfdf', '2017-09-21', 'dfdf', '2017-09-25 10:32:04', '1702005', '0000-00-00 00:00:00', '1', '', '1707001');
 
 -- ----------------------------
 -- Table structure for area_location_d
@@ -93,59 +103,26 @@ CREATE TABLE `area_location_d` (
 -- ----------------------------
 -- Records of area_location_d
 -- ----------------------------
-INSERT INTO `area_location_d` VALUES ('1709001', '0.5591458734908274', '123.05674016475677');
-INSERT INTO `area_location_d` VALUES ('1709001', '0.5588401162154292', '123.05671334266663');
-INSERT INTO `area_location_d` VALUES ('1709001', '0.5585987288815019', '123.0577164888382');
-INSERT INTO `area_location_d` VALUES ('1709001', '0.5589313069834487', '123.0577701330185');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5577136419056331', '123.05648267269135');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5571182196833361', '123.05633783340454');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5569090172666156', '123.0569440126419');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5568285547966771', '123.05738389492035');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5568982889373524', '123.05738925933838');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.556635444864316', '123.05837631225586');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5568821964434257', '123.05838704109192');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5571504046698662', '123.05747509002686');
-INSERT INTO `area_location_d` VALUES ('1709002', '0.5574400695406988', '123.05750727653503');
-INSERT INTO `area_location_d` VALUES ('1709008', '0.5578370176738845', '123.05908977985382');
-INSERT INTO `area_location_d` VALUES ('1709008', '0.5575044395100569', '123.05903613567352');
-INSERT INTO `area_location_d` VALUES ('1709008', '0.5573274220926269', '123.0596798658371');
-INSERT INTO `area_location_d` VALUES ('1709008', '0.5577887401996616', '123.05975496768951');
-INSERT INTO `area_location_d` VALUES ('1709008', '0.5578960234751951', '123.05907905101776');
-INSERT INTO `area_location_d` VALUES ('1709009', '0.5580462200576418', '123.05754482746124');
-INSERT INTO `area_location_d` VALUES ('1709009', '0.5576814569221817', '123.05689036846161');
-INSERT INTO `area_location_d` VALUES ('1709009', '0.5576117227907682', '123.05808126926422');
-INSERT INTO `area_location_d` VALUES ('1709010', '0.5591405093282378', '123.05675625801086');
-INSERT INTO `area_location_d` VALUES ('1709010', '0.5587864745865171', '123.0567079782486');
-INSERT INTO `area_location_d` VALUES ('1709010', '0.558604093044575', '123.05771112442017');
-INSERT INTO `area_location_d` VALUES ('1709010', '0.5589473994717775', '123.05779159069061');
-INSERT INTO `area_location_d` VALUES ('1709012', '0.5588186595639254', '123.05999636650085');
-INSERT INTO `area_location_d` VALUES ('1709012', '0.55845389647639', '123.05992662906647');
-INSERT INTO `area_location_d` VALUES ('1709012', '0.558416347333733', '123.06026458740234');
-INSERT INTO `area_location_d` VALUES ('1709012', '0.5587650179348226', '123.06033432483673');
-INSERT INTO `area_location_d` VALUES ('1709013', '0.5591834226288154', '123.06005537509918');
-INSERT INTO `area_location_d` VALUES ('1709013', '0.5588562087039998', '123.05999636650085');
-INSERT INTO `area_location_d` VALUES ('1709013', '0.5587864745865171', '123.06034505367279');
-INSERT INTO `area_location_d` VALUES ('1709013', '0.5591297810030457', '123.06038796901703');
-INSERT INTO `area_location_d` VALUES ('1709014', '0.5578906593114604', '123.05909514427185');
-INSERT INTO `area_location_d` VALUES ('1709014', '0.5574776186895769', '123.0590307712555');
-INSERT INTO `area_location_d` VALUES ('1709014', '0.5573435145853448', '123.0596798658371');
-INSERT INTO `area_location_d` VALUES ('1709014', '0.5577511910527683', '123.05976569652557');
-INSERT INTO `area_location_d` VALUES ('1709015', '0.559961226147363', '123.05691719055176');
-INSERT INTO `area_location_d` VALUES ('1709015', '0.559408717451692', '123.05745899677277');
-INSERT INTO `area_location_d` VALUES ('1709015', '0.5595267290221259', '123.05613934993744');
-INSERT INTO `area_location_d` VALUES ('1709016', '0.5587811104236093', '123.0599856376648');
-INSERT INTO `area_location_d` VALUES ('1709016', '0.5584860814556049', '123.05991590023041');
-INSERT INTO `area_location_d` VALUES ('1709016', '0.5584002548439538', '123.06028604507446');
-INSERT INTO `area_location_d` VALUES ('1709016', '0.5587542896089435', '123.06033432483673');
-INSERT INTO `area_location_d` VALUES ('1709016', '0.5588293878896773', '123.05999100208282');
-INSERT INTO `area_location_d` VALUES ('1709017', '0.5584378039866998', '123.05992662906647');
-INSERT INTO `area_location_d` VALUES ('1709017', '0.558158867491961', '123.05986762046814');
-INSERT INTO `area_location_d` VALUES ('1709017', '0.5580569483848058', '123.06023240089417');
-INSERT INTO `area_location_d` VALUES ('1709017', '0.5583680698642556', '123.06025385856628');
-INSERT INTO `area_location_d` VALUES ('1709018', '0.5592638850665539', '123.05604815483093');
-INSERT INTO `area_location_d` VALUES ('1709018', '0.5589366711462292', '123.05597305297852');
-INSERT INTO `area_location_d` VALUES ('1709018', '0.558942035308997', '123.05625200271606');
-INSERT INTO `area_location_d` VALUES ('1709018', '0.5592424284165896', '123.0562949180603');
+INSERT INTO `area_location_d` VALUES ('1709001', '0.5598673533143967', '123.05941700935364');
+INSERT INTO `area_location_d` VALUES ('1709001', '0.5597922550469193', '123.0597522854805');
+INSERT INTO `area_location_d` VALUES ('1709001', '0.5592317000915883', '123.05967181921005');
+INSERT INTO `area_location_d` VALUES ('1709001', '0.5592692492290163', '123.05933386087418');
+INSERT INTO `area_location_d` VALUES ('1709002', '0.5598003012899261', '123.05976569652557');
+INSERT INTO `area_location_d` VALUES ('1709002', '0.5597466596697797', '123.06013584136963');
+INSERT INTO `area_location_d` VALUES ('1709002', '0.5594462665879878', '123.06009292602539');
+INSERT INTO `area_location_d` VALUES ('1709002', '0.5594999082108822', '123.05972278118134');
+INSERT INTO `area_location_d` VALUES ('1709003', '0.5598003012899261', '123.05976569652557');
+INSERT INTO `area_location_d` VALUES ('1709003', '0.5597466596697797', '123.06013584136963');
+INSERT INTO `area_location_d` VALUES ('1709003', '0.5594462665879878', '123.06009292602539');
+INSERT INTO `area_location_d` VALUES ('1709003', '0.5594999082108822', '123.05972278118134');
+INSERT INTO `area_location_d` VALUES ('1709004', '0.5592317000915883', '123.05966913700104');
+INSERT INTO `area_location_d` VALUES ('1709004', '0.5588132954010432', '123.05966377258301');
+INSERT INTO `area_location_d` VALUES ('1709004', '0.5588293878896773', '123.0599856376648');
+INSERT INTO `area_location_d` VALUES ('1709004', '0.5591834226288154', '123.06005537509918');
+INSERT INTO `area_location_d` VALUES ('1709005', '0.5594999082108822', '123.05972278118134');
+INSERT INTO `area_location_d` VALUES ('1709005', '0.5592424284165896', '123.05971205234528');
+INSERT INTO `area_location_d` VALUES ('1709005', '0.5591887867913669', '123.06004464626312');
+INSERT INTO `area_location_d` VALUES ('1709005', '0.559440902425678', '123.0600768327713');
 
 -- ----------------------------
 -- Table structure for ci_sessions
@@ -191,11 +168,33 @@ CREATE TABLE `login_attempts` (
   `login` varchar(50) COLLATE utf8_bin NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Records of login_attempts
 -- ----------------------------
+INSERT INTO `login_attempts` VALUES ('1', '127.0.0.1', 'fgfg', '2017-09-27 08:11:37');
+INSERT INTO `login_attempts` VALUES ('3', '127.0.0.1', 'xzxz', '2017-09-27 08:15:29');
+
+-- ----------------------------
+-- Table structure for markers
+-- ----------------------------
+DROP TABLE IF EXISTS `markers`;
+CREATE TABLE `markers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  `address` varchar(80) NOT NULL,
+  `lat` float(10,6) NOT NULL,
+  `lng` float(10,6) NOT NULL,
+  `type` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of markers
+-- ----------------------------
+INSERT INTO `markers` VALUES ('1', 'Love.Fish', '580 Darling Street, Rozelle, NSW', '-33.861034', '151.171936', 'restaurant');
+INSERT INTO `markers` VALUES ('2', 'Young Henrys', '76 Wilford Street, Newtown, NSW', '-33.898113', '151.174469', 'bar');
 
 -- ----------------------------
 -- Table structure for organization_project
@@ -205,7 +204,7 @@ CREATE TABLE `organization_project` (
   `projectid` varchar(15) NOT NULL,
   `organizationid` varchar(15) DEFAULT NULL,
   `created` datetime NOT NULL,
-  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL,
   `created_by` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`projectid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -227,17 +226,26 @@ CREATE TABLE `project` (
   `project` varchar(100) DEFAULT NULL,
   `imagepath` varchar(100) DEFAULT NULL,
   `created` datetime NOT NULL,
-  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL,
   `created_by` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `org_id` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `lat` varchar(200) NOT NULL,
+  `long` varchar(200) NOT NULL,
+  `imglnorth` varchar(200) DEFAULT NULL,
+  `imglsouth` varchar(200) DEFAULT NULL,
+  `imgleast` varchar(200) DEFAULT NULL,
+  `imglwest` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`projectid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of project
 -- ----------------------------
-INSERT INTO `project` VALUES ('20160505', 'Ary MP 5 Dec 2017', 'jamal', '2017-04-13 14:35:24', '2017-08-10 10:33:54', '');
-INSERT INTO `project` VALUES ('20160506', 'Ary MP 12 Dec 2017', 'jamal', '2017-04-13 14:35:24', '2017-08-10 10:34:02', '');
-INSERT INTO `project` VALUES ('20160507', 'Ary MP 25 Dec 2017', 'jamal', '2017-04-13 14:35:24', '2017-08-10 10:34:09', '');
+INSERT INTO `project` VALUES ('1709001', 'XXX PROYEK', '59c87c98dce36.png', '2017-09-25 09:16:12', '2017-09-25 10:48:40', '1709001', '1709001', '0.5585831513372275', '123.05879216169362', '0.556706230317291', '123.05865000461586', '0.5601580693606888', '123.06106935714729');
+INSERT INTO `project` VALUES ('1709002', 'JOKO PRY', '59c88143329a1.jpg', '2017-09-25 11:08:35', '0000-00-00 00:00:00', '1702005', '1', '', '', null, null, null, null);
+INSERT INTO `project` VALUES ('20160505', 'Ary MP 5 Dec 2017', '1491411269.png', '2017-04-13 14:35:24', '2017-08-10 10:33:54', '', '1', '0.5585831513372275', '123.05879216169362', '0.556706230317291', '123.05865000461586', '0.5601580693606888', '123.06106935714729');
+INSERT INTO `project` VALUES ('20160506', 'Ary MP 12 Dec 2017', '1491411269.png', '2017-04-13 14:35:24', '2017-08-10 10:34:02', '', '1', '0.5585831513372275', '123.05879216169362', '0.556706230317291', '123.05865000461586', '0.5601580693606888', '123.06106935714729');
+INSERT INTO `project` VALUES ('20160507', 'Ary MP 25 Dec 2017', '1491411269.png', '2017-04-13 14:35:24', '2017-09-20 20:02:49', '1704001', '1', '0.5585831513372275', '123.05879216169362', '0.556706230317291', '123.05865000461586', '0.5601580693606888', '123.06106935714729');
 
 -- ----------------------------
 -- Table structure for rf_organization
@@ -255,7 +263,7 @@ CREATE TABLE `rf_organization` (
   `activated` tinyint(1) NOT NULL DEFAULT '1',
   `created` datetime NOT NULL,
   `created_by` varchar(16) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `modified` datetime NOT NULL,
   PRIMARY KEY (`org_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -268,6 +276,8 @@ INSERT INTO `rf_organization` VALUES ('1708002', 'TOPAZ', '1708001', 'ajsas@gmai
 INSERT INTO `rf_organization` VALUES ('1708003', 'WOKEH ENERGY', '1707001', 'dyah.sodikin@encona.co.id', '455454545', 'test', null, null, '1', '2017-08-11 11:16:16', '1', '2017-08-11 11:16:16');
 INSERT INTO `rf_organization` VALUES ('1708004', 'WOWOWOY', '1', 'ssss@gmail.com', '7878787', 'stetes', null, null, '1', '2017-08-11 11:18:10', '1', '2017-08-11 11:18:10');
 INSERT INTO `rf_organization` VALUES ('1708005', 'FLASH AND FLIP ENERGY', '1704001', 'jennis.fitria@encona.co.id', '1233333', 'test', null, null, '1', '2017-08-11 11:19:51', '1', '2017-08-11 11:19:51');
+INSERT INTO `rf_organization` VALUES ('1709001', 'TOPAN COMPANY', '1709001', 'aaa@xxx.com', '08121212', 'wewew', null, null, '1', '2017-09-25 09:09:09', '1702005', '0000-00-00 00:00:00');
+INSERT INTO `rf_organization` VALUES ('1709002', 'JOKO ORG', '1709004', 'joko@xx.com', '12333', 'sds', null, null, '1', '2017-09-25 11:08:17', '1702005', '2017-09-25 13:42:19');
 INSERT INTO `rf_organization` VALUES ('2', 'ENCONA ENGINEERING', '1708001', 'ajamaludin@gmail.com', '454545', '', null, null, '1', '2017-03-21 10:46:50', '1', '2017-08-11 13:59:04');
 INSERT INTO `rf_organization` VALUES ('6', 'BUMDES GORONTALO', 'justin', 'justin.the@encona.co.id', '081133333', '', null, null, '1', '2017-04-03 08:21:23', '1', '2017-08-11 13:59:16');
 INSERT INTO `rf_organization` VALUES ('c170001', 'ASEP INC', 'james', 'ajamaludin@gmail.com', '121212', '', null, null, '1', '2017-05-05 13:27:54', '1', '2017-08-11 13:58:53');
@@ -312,10 +322,14 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1702005', '1', 'jamal', 'Jamal', 'Jamaludin', '$2a$08$RcXpDGgi1N1TIwWBAfGFU.PCvJSsdjSBJA66T8HBNGrzc7ApWrz0u', 'ajamaludin@gmail.com', null, null, '1', '0', null, null, null, null, null, '127.0.0.1', '2017-09-08 15:15:11', '1702005.jpg', 'admin', null, '1989-04-05', '1', 'encona', '1', '2017-08-03 16:34:41', '2017-09-08 15:15:11', '1', '1');
-INSERT INTO `users` VALUES ('1704001', '1', '1704001', 'justin', 'the', '$2a$08$hb9HSglUewBt0aGIb4.Py.0DbnEr06zOq6GY6k4fpM8Zu2qviaB6W', 'justin.the@encona.co.id', null, null, '1', '0', null, null, null, null, null, '127.0.0.1', '2017-09-08 10:40:39', '1704001.png', 'user', 'id', '1985-04-03', '2', '', null, '2017-08-04 08:40:46', '2017-09-08 10:40:39', '1', '1');
+INSERT INTO `users` VALUES ('1702005', '1', 'jamal', 'Jamal', 'Jamaludin', '$2a$08$RcXpDGgi1N1TIwWBAfGFU.PCvJSsdjSBJA66T8HBNGrzc7ApWrz0u', 'ajamaludin@gmail.com', null, null, '1', '0', null, null, null, null, null, '127.0.0.1', '2017-09-27 16:45:53', '1702005.jpg', 'admin', null, '1989-04-05', '1', 'encona', '', '2017-08-03 16:34:41', '2017-09-27 16:45:53', '1', '1');
+INSERT INTO `users` VALUES ('1704001', '1', 'justin', 'justin', 'the', '$2a$08$hb9HSglUewBt0aGIb4.Py.0DbnEr06zOq6GY6k4fpM8Zu2qviaB6W', 'justin.the@encona.co.id', null, null, '1', '0', null, null, null, null, null, '202.74.73.186', '2017-09-25 08:41:08', '1704001.png', 'spv', 'id', '1985-04-03', '2', '', '', '2017-08-04 08:40:46', '2017-09-25 01:41:08', '1', '1');
 INSERT INTO `users` VALUES ('1707001', '1', 'jamaludin', 'jack', 'daniels', '$2a$08$bDusM/O7Z9UEGgwY5HzUrONnuKYImsiVZk.a6D5xxdsKl3MmtqVS6', 'asep.jamaludin@encona.co.id', null, null, '1', '0', null, null, null, null, null, '127.0.0.1', '2017-07-20 10:58:59', '1707001.png', 'admin', null, '2002-02-01', '1', 'test', null, '2017-08-08 10:29:59', '2017-09-04 08:49:58', '1', '1');
 INSERT INTO `users` VALUES ('1708001', '6', 'jamalud87', 'JAMAL', 'UDINSS', '$2a$08$buqQAXa/StDCmLlkvOX2tumRG4szGLZX3DhH.qHgHrHha.5/NNK9m', 'ajamaludins@hotmail.com', '081311345499', '02121221212', '1', '0', null, null, null, null, null, '127.0.0.1', '0000-00-00 00:00:00', null, 'user', null, '2012-12-12', '1', 'test', null, '2017-08-03 16:35:47', '2017-08-28 10:07:42', '1', '1');
+INSERT INTO `users` VALUES ('1709001', '1709001', 'alito6', 'ALI', 'TOPAN', '$2a$08$v3EIF7tTYshL6FZ4WGdj..8xcyXjctBjR21e2VpB8qHFEKq6e2/7e', 'ali.topan@xxx.com', '0855886699', '12345454', '1', '0', null, null, null, null, null, '127.0.0.1', '2017-09-25 10:49:00', null, 'spv', null, '1985-09-30', '1', '', '', '2017-09-25 09:07:53', '2017-09-25 11:03:15', '1702005', '1');
+INSERT INTO `users` VALUES ('1709002', '1709001', 'jhonyha81', 'JHONY', 'HALLO', '$2a$08$Q4x2tZg5Qd8DbhYKox/OTOBSLFZCVNJxl9mfxJl3GJo1kztbMsx2u', 'jhony@xxx.com', '45454', 'sdsd', '1', '0', null, null, null, null, null, '202.74.73.186', '0000-00-00 00:00:00', null, 'user', null, '1987-09-30', '1', 'dsdsd', null, '2017-09-25 09:13:21', '2017-09-25 02:13:21', '1709001', '1');
+INSERT INTO `users` VALUES ('1709003', '1709001', 'sdsds53', 'SDS', 'DSDS', '$2a$08$6n0WDiGsSkXyAog./5YTZu0imoIe7JZBzf5mtdtQ7scRO.XETBq.m', 'asasa@email.com', 'sd', 'sd', '1', '0', null, null, null, null, null, '127.0.0.1', '0000-00-00 00:00:00', null, 'user', null, '2017-09-25', '1', 'sd', null, '2017-09-25 11:04:54', '2017-09-25 11:04:54', '1709001', '1');
+INSERT INTO `users` VALUES ('1709004', '1709002', 'jokosu88', 'JOKO', 'SUSANTO', '$2a$08$Z0b1W9XIyhA1/Ml.u/g3NefxiijYylN7NV7zFrOYgV2TE3dKCLCM6', 'joko@xx.com', 'dsd', 'dsds', '1', '0', null, null, null, null, null, '127.0.0.1', '0000-00-00 00:00:00', null, 'user', null, '2017-09-25', '1', 'sdsd', null, '2017-09-25 11:06:31', '2017-09-25 13:42:19', '1702005', '1');
 
 -- ----------------------------
 -- Table structure for user_autologin
@@ -333,6 +347,8 @@ CREATE TABLE `user_autologin` (
 -- ----------------------------
 -- Records of user_autologin
 -- ----------------------------
+INSERT INTO `user_autologin` VALUES ('4712a0404cc798c074b5c9d5db32088c', '1704001', 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0', '118.136.1.192', '2017-09-20 13:03:45');
+INSERT INTO `user_autologin` VALUES ('c6fa9f7ff4d5d20184335e3d81ea7def', '1704001', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/60.0.3112.113 Chrome/60.0.3112.113 Safari/537.36', '202.74.73.186', '2017-09-25 01:20:30');
 
 -- ----------------------------
 -- Table structure for user_profiles
